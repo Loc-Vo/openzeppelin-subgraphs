@@ -1,0 +1,7 @@
+{
+    "output": "generated/kai.",
+    "chain": "kaimainnet",
+    "datasources": [
+      { "address": "0xB6B1c64aB2eFC64953c12993D1C05B473D1E659b", "startBlock": 243326, "module": [ "krc20" ] }
+    ]
+  }
