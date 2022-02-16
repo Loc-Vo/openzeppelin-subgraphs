@@ -1,0 +1,26 @@
+specVersion: 0.0.2
+schema:
+  file: kai.schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: krc20
+    network: kaitestnet
+    source:
+      address: "0xB6B1c64aB2eFC64953c12993D1C05B473D1E659b"
+      abi: IKRC20
+      startBlock: 243326
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - KRC20Contract
+      abis:
+        - name: IKRC20
+          file: src/kai/IKRC20.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApproval
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      file: krc20/krc20.wasm

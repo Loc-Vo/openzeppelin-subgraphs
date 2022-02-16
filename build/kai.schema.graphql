@@ -1,0 +1,63 @@
+type Account @entity {
+	id: ID!
+	asKRC20: KRC20Contract
+	KRC20balances: [KRC20Balance!]! @derivedFrom(field: "account")
+	KRC20approvalsOwner: [KRC20Approval!]! @derivedFrom(field: "owner")
+	KRC20approvalsSpender: [KRC20Approval!]! @derivedFrom(field: "spender")
+	KRC20transferFromEvent: [KRC20Transfer!]! @derivedFrom(field: "from")
+	KRC20transferToEvent: [KRC20Transfer!]! @derivedFrom(field: "to")
+	events: [Event!]! @derivedFrom(field: "emitter")
+}
+type KRC20Contract @entity {
+	id: ID!
+	asAccount: Account!
+	name: String
+	symbol: String
+	decimals: Int!
+	totalSupply: KRC20Balance!
+	balances: [KRC20Balance!]! @derivedFrom(field: "contract")
+	approvals: [KRC20Approval!]! @derivedFrom(field: "contract")
+	transfers: [KRC20Transfer!]! @derivedFrom(field: "contract")
+}
+type KRC20Balance @entity {
+	id: ID!
+	contract: KRC20Contract!
+	account: Account
+	value: BigDecimal!
+	valueExact: BigInt!
+	transferFromEvent: [KRC20Transfer!]! @derivedFrom(field: "fromBalance")
+	transferToEvent: [KRC20Transfer!]! @derivedFrom(field: "toBalance")
+}
+type KRC20Approval @entity {
+	id: ID!
+	contract: KRC20Contract!
+	owner: Account!
+	spender: Account!
+	value: BigDecimal!
+	valueExact: BigInt!
+}
+type KRC20Transfer implements Event @entity {
+	id: ID!
+	emitter: Account!
+	transaction: Transaction!
+	timestamp: BigInt!
+	contract: KRC20Contract!
+	from: Account
+	fromBalance: KRC20Balance
+	to: Account
+	toBalance: KRC20Balance
+	value: BigDecimal!
+	valueExact: BigInt!
+}
+interface Event {
+	id: ID!
+	transaction: Transaction!
+	emitter: Account!
+	timestamp: BigInt!
+}
+type Transaction @entity {
+	id: ID!
+	timestamp: BigInt!
+	blockNumber: BigInt!
+	events: [Event!]! @derivedFrom(field: "transaction")
+}
